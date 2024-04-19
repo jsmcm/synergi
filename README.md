@@ -51,6 +51,10 @@ There is a user factory which you can use to seed your database with test info:
     Create 2 admin users:
     User::factory(2)->admin()->create();
 
+**Config**
+There are two config settings in config/synergi.php. These are:
+ - countCacheTtl. This setting is the amount of time the admin user count is cached for. This is what checks if we show the user login page or the no admin user page. It can be used in code as **config("synergi.countCacheTtl")** and can be set in the .env file as **SYNERGI_USERS_COUNT_CACHE_TTL**. The default is 6 hours.
+ - paginationSize. This sets the number of items to show in the user's listing when an admin logs in. It can be accessed in code by **config("synergi.paginationSize")** and can be set in the .env file as **SYNERGI_PAGINATION_SIZE**. The detail page size is 50.
 
 ## Additional Features
 
