@@ -56,6 +56,14 @@ There are two config settings in config/synergi.php. These are:
  - countCacheTtl. This setting is the amount of time the admin user count is cached for. This is what checks if we show the user login page or the no admin user page. It can be used in code as **config("synergi.countCacheTtl")** and can be set in the .env file as **SYNERGI_USERS_COUNT_CACHE_TTL**. The default is 6 hours.
  - paginationSize. This sets the number of items to show in the user's listing when an admin logs in. It can be accessed in code by **config("synergi.paginationSize")** and can be set in the .env file as **SYNERGI_PAGINATION_SIZE**. The detail page size is 50.
 
+
+## Welcome Email
+In order for the welcome email to work you'll need to set up your email SMTP server info in the .env file. By default we've used the log driver to test with. You can check for emails in storage/logs/laravel.log.
+
+You'll also need to set up a queue worker or Horizon or whatever method you usually use. The simplest way for testing is probably **php artisan queue:work**.
+
+
+
 ## Additional Features
 
 While the specification only called for a form for a user to submit data to the database and asked for simplicity I chose to go with a fuller app for 2 reasons:
