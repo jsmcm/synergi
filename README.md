@@ -26,11 +26,11 @@ To begin, clone this repo then in a terminal cd into the project folder (usually
 
 Create an .env file. You can do this by copying the .env.example file to .env which will contain a logical starting point but you can override settings as required.
 
- and then type the following commands:
+ and then type the following commands (order is important):
 
+- composer install
 - npm install
 - npm run build
-- composer install
 - php artisan migrate
 - php artisan key:generate
 
