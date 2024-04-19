@@ -49,6 +49,7 @@ class UserRequest extends FormRequest
             'role'      => 'nullable|string|in:client,admin',
             "email"     => "required|email",
             'password'  => "nullable|string|min:8|max:64|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/",
+            'comment'   => 'nullable|string',
         ];
 
     }

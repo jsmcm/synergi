@@ -13,7 +13,7 @@ import { Head } from '@inertiajs/vue3';
             <div class="container d-md-flex align-items-md-center vh-md-100 content-space-t-3 content-space-b-1 content-space-b-md-3 content-space-md-0">
                 <div class="row justify-content-md-between align-items-md-center flex-grow-1">
                 <div class="col-9 col-md-5 mb-5 mb-md-0">
-                    <img class="img-fluid" src="/assets/svg/illustrations/oc-looking-for-answers.svg" alt="SVG Illustration">
+                    <img class="img-fluid" src="/assets/svg/illustrations/oc-looking-for-answers.svg" alt="Login to continue">
                 </div>
                 <!-- End Col -->
 

@@ -2,11 +2,16 @@
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import {  useForm, Head } from '@inertiajs/vue3';
+import { useForm, Head, usePage } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import { ref, onMounted, watch } from "vue";
 
 import "vue3-select-component/dist/style.css";
 
+
+defineProps({
+    pageData: Array
+});
 
 // could possibly refactor this into a composable
 // to share code with the profile edit (the user's own)
@@ -49,6 +54,14 @@ let save = () => {
 
                 <section>
                     
+                    <div v-if="$page.props.flash.message" class="alert alert-success" role="alert">
+                        {{ $page.props.flash.message }}
+                    </div>
+
+                    <div v-if="$page.props.flash.error" class="alert alert-danger" role="alert">
+                        {{ $page.props.flash.error }}
+                    </div>
+
                     <div class="text-center mb-5 mb-md-7">
                         <h1 class="h2">Welcome, please enter your info</h1>
                     </div>

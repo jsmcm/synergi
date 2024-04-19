@@ -15,14 +15,14 @@ class CreateFirstAdminCommandTest extends TestCase
     public function test_can_create_first_admin(): void
     {
         //User::truncate();
-        $this->artisan('synergi:create_first_admin Joe Black joe@example.com +270000000000 AbC123%$ 1988-01-20 english')->assertSuccessful();
+        $this->artisan('synergi:create_first_admin Joe joe@example.com AbC123%$')->assertSuccessful();
     }
 
     public function test_can_create_first_admin_only_once(): void
     {
         //User::truncate();
-        $this->artisan('synergi:create_first_admin Joe Black joe@example.com +270000000000 AbC123%$ 1988-01-20 english')->assertSuccessful();
-        $this->artisan('synergi:create_first_admin Joe Black joe@example.com +270000000000 AbC123%$ 1988-01-20 english')->assertFailed();
+        $this->artisan('synergi:create_first_admin Joe joe@example.com AbC123%$')->assertSuccessful();
+        $this->artisan('synergi:create_first_admin Joe joe@example.com AbC123%$')->assertFailed();
     }
 
 }

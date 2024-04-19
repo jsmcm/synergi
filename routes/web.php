@@ -25,11 +25,16 @@ Route::get("/", function() {
 });
 
 
+Route::get("/thank-you", function() {
+    return Inertia::render("ThankYou", [
+        "name" => Request()->query("name"),
+    ]);
+})->name("user.thanks");
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
 
 
 Route::get('/users', function () {
@@ -40,11 +45,9 @@ Route::get('/users', function () {
 })->middleware(['auth', IsAdmin::class, 'verified'])->name('user.list');
 
 
-
 Route::delete("/users", [UserController::class, "delete"])
     ->middleware(["auth", IsAdmin::class, "verified"])
     ->name("user.delete");
-
 
 
 Route::get("/users/edit/{user?}", function (User $user = null) {
@@ -68,7 +71,6 @@ Route::get("/users/edit/{user?}", function (User $user = null) {
 
 
 
-// should probably move most of this to the userservice class..
 Route::put("/users/edit/{user}", function (User $user, UserRequest $request) {
 
     $validatedData = $request->validated();
@@ -80,7 +82,7 @@ Route::put("/users/edit/{user}", function (User $user, UserRequest $request) {
         $user->save();
 
         $commentService = new CommentService();
-        $comment = $commentService->store($user, filter_var(Request()->comment, FILTER_UNSAFE_RAW));
+        $comment = $commentService->store($user, filter_var($validatedData["comment"], FILTER_UNSAFE_RAW));
 
     } catch (\Exception $e) {
 
@@ -101,8 +103,6 @@ Route::put("/users/edit/{user}", function (User $user, UserRequest $request) {
 ->name("user.put");
 
 
-
-
 Route::post("/users", function (UserRequest $request) {
 
     $validatedData = $request->validated();
@@ -112,29 +112,42 @@ Route::post("/users", function (UserRequest $request) {
         $userService = new UserService();
         $user = $userService->store($validatedData["role"]??"client", $validatedData["name"], $validatedData["email"], Hash::make(Str::random(64)));
 
-        if ($user && Request()->comment) {
+        if ($user && $validatedData["comment"]) {
             $commentService = new CommentService();
-            $comment = $commentService->store($user, filter_var(Request()->comment, FILTER_UNSAFE_RAW));
+            $comment = $commentService->store($user, filter_var($validatedData["comment"], FILTER_UNSAFE_RAW));
         }
 
     } catch (\Exception $e) {
 
         if ($e->getCode() == 23000) {
-            return Redirect::route("user.list", ["page" => Request()->currentPage??1])
-            ->with("error", " Failed: this email or mobile is already in use by another user"); // probably won't do this for real. It could leak sensitive data..
+
+            if (Auth()->user() && Auth()->user()->role == "admin") {
+                return Redirect::route("user.list", ["page" => Request()->currentPage??1])
+                    ->with("error", "Failed: this email is already registered. Please log in instead."); // probably won't do this for real. It could leak sensitive data..
+            } else {
+                return Redirect::back()
+                    ->with("error", "Failed: this email is already registered. Please log in instead."); // probably won't do this for real. It could leak sensitive data..
+            }
         }
 
-        return Redirect::route("user.list")
-            ->with("error", "Failed: ".$e->getMessage()); // probably won't do this for real. It could leak sensitive data..
+        if (Auth()->user() && Auth()->user()->role == "admin") {
+            return Redirect::route("user.list")
+                ->with("error", "Failed: ".$e->getMessage()); // probably won't do this for real. It could leak sensitive data..
+        } else {
+            return Redirect::back()
+            ->with("error", "Failed: ".$e->getMessage()); // probably won't do this for real. It could leak sensitive data..  
+        }
     }
 
-    return Redirect::route('user.list', ["page" => Request()->currentPage??1])
-        ->with("message", "User Added!");
+    if (Auth()->user() && Auth()->user()->role == "admin") {
+        return Redirect::route('user.list', ["page" => Request()->currentPage??1])
+            ->with("message", "User Added!");
+    } else {
+        return Redirect::route('user.thanks', ["name" => $user->name]); 
+    }
 
 })
 ->name("user.post");
-
-
 
 
 Route::middleware('auth')->group(function () {
@@ -143,5 +156,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';

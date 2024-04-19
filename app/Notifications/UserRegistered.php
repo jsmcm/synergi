@@ -41,7 +41,7 @@ class UserRegistered extends Notification
         // );
 
         return (new MailMessage)
-                    ->line('Hi '.$notifiable->first_name.',')
+                    ->line('Hi '.$notifiable->name.',')
                     ->line('You\'ve been registered on '.env('APP_NAME').'. Get ready for amazing things!')
 	            ->line('To get your password please [Reset your password](' . config('app.url') . '/forgot-password)');
 
