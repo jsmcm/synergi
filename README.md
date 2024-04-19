@@ -20,38 +20,47 @@ There is a UserRequest validation class in app\Http\Requests to validate form su
 
 When a new User modal is created it fires a UserCreated event. There is a NotifyUserOfRegistration listener which listens for these events. This listener triggers a UserRegistered notification which sends the user welcome email.
 
-## Laravel Sponsors
+## Running the Code
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+To begin, clone this repo then in a terminal cd into the project folder (usually synergi).
 
-### Premium Partners
+Create an .env file. You can do this by copying the .env.example file to .env which will contain a logical starting point but you can override settings as required.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+ and then type the following commands:
 
-## Contributing
+- npm install
+- npm run build
+- composer install
+- php artisan migrate
+- php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+To run the app (assuming you have not set up a running server) you can type **php artisan serve** and then navigate to the url it specifies in a browser.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Note:** Your application will have no users. This will not prevent a user from registering at the home page (/) but it will prevent any logins. If you visited the login page (/login) it will show a page warning that there is no admin user. 
 
-## Security Vulnerabilities
+**Create your first admin user**. To create your first admin user use the artisan command as shown on the warning page. The command is:
+  php artisan synergi:create_first_admin {name} {email} {password}
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+There is a user factory which you can use to seed your database with test info:
+    examples:
+    
+    Create 3 client users:
+    User::factory()->count(3)->create();
+    
+    Create 2 admin users:
+    User::factory(2)->admin()->create();
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Additional Features
+
+While the specification only called for a form for a user to submit data to the database and asked for simplicity I chose to go with a fuller app for 2 reasons:
+- I already did a site (last week) for a different recruitment test which asked only for the admin side of things (there was no requirement for a user to add themselves). I do believe that reusing code is beter than starting from scratch each time (where its ok to do this given code ownership etc). In this case it was easy enough to clone and edit that code.
+- Installing Inertia and VueJs is much easier using Laravel Breeze than trying to do it by hand and Breeze already gives us all the auth functionality.
+
+
+## Testing
+
+There are several tests using phpunit. These test that the application is running, that the user's form works and that once the form is submitted it actually creates the new user modal. There are also tests to ensure that each user is unique.
+
+**Note:** these tests are not exhaustive, there could be many more but these do demonstrate the important ones. Many other tests while necessary in a production application would be mostly copies of these.
